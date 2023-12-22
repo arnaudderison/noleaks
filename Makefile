@@ -29,7 +29,7 @@ GNL_OBJS = $(GNL_SRCS:.c=.o)
 
 # noleaks sources
 NOLEAKS_SRCS = $(wildcard ./src/*/*.c) \
-				src/main.c
+				$(wildcard ./src/*.c)
 NOLEAKS_OBJS = $(NOLEAKS_SRCS:.c=.o)
 
 # Compilation rules
