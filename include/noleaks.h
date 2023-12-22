@@ -1,6 +1,8 @@
 #ifndef NOLEAKS_H
 # define NOLEAKS_H
 
+# include "ft_printf.h"
+# include "libft.h"
 # include <unistd.h>
 
 typedef struct
