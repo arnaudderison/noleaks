@@ -62,8 +62,11 @@ int	main(void)
 }
 ```
 result:
+
 ![resulat sans free](./images/leaks.png)
+
 if you uncomment "nlfree()".
+
 ![resulat sans free](./images/noleaks.png)
 
 ## Usage
