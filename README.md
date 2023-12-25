@@ -19,7 +19,8 @@ Simple and effective you know malloc? you know free? prefix with nl and do as us
 
 Add a small debugging function to find out where the leaks are, and you've got the solution.
 
-⚠️ with large memory values in multithreaded mode, some bugs have yet to be resolved
+⚠️ with large memory values in multithreaded mode, some bugs have yet to be resolved.
+
 Prototype :
 ```c
 void *nlmalloc(size_t size);
