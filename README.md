@@ -18,6 +18,7 @@ That's why I've coded a small library that will detect your memory leaks. So you
 Simple and effective you know malloc? you know free? prefix with nl and do as usual 😎.
 
 Add a small debugging function to find out where the leaks are, and you've got the solution.
+
 ⚠️ with large memory values in multithreaded mode, some bugs have yet to be resolved
 Prototype :
 ```c
