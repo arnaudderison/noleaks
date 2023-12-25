@@ -4,6 +4,7 @@
 
 # include "../src/libft/ft_printf/includes/ft_printf.h"
 # include <fcntl.h>
+# include <pthread.h>
 # include <sys/mman.h> //mmap
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -31,4 +32,5 @@ size_t							align_size(size_t size, size_t alignment);
 void							*nlmalloc(size_t size);
 void							nlfree(void *ptr);
 void							check_memory_leaks(void);
+void check_fragmentation();
 #endif

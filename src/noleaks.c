@@ -1,6 +1,8 @@
 #include "../include/noleaks.h"
 
 static t_memory_block	*memory_block;
+pthread_mutex_t			memory_list_lock = PTHREAD_MUTEX_INITIALIZER;
+				// cannot be reallocated
 
 void	*nlmalloc(size_t size)
 {
@@ -8,6 +10,7 @@ void	*nlmalloc(size_t size)
 
 	if (size == 0)
 		return (NULL);
+	pthread_mutex_lock(&memory_list_lock);
 	size = align_size(size, STANDARD_ALIGNEMENT_UNIX);
 	block = find_best_fit(size, &memory_block);
 	if (!block)
@@ -27,6 +30,7 @@ void	*nlmalloc(size_t size)
 			spliting(block, size);
 		block->free = 0;
 	}
+	pthread_mutex_unlock(&memory_list_lock);
 	return (void *)(block + 1); // + for metadata
 }
 
@@ -34,11 +38,13 @@ void	nlfree(void *ptr)
 {
 	t_memory_block	*block;
 
-	if (ptr == NULL)
+	if (!ptr)
 		return ;
+	pthread_mutex_lock(&memory_list_lock);
 	block = (t_memory_block *)ptr - 1;
 	block->free = 1;
 	coalescence(&block);
+	pthread_mutex_unlock(&memory_list_lock);
 }
 
 void	check_memory_leaks(void)
@@ -62,4 +68,31 @@ void	check_memory_leaks(void)
 		ft_printf("Aucune fuite de mémoire détectée. ✅\n");
 	else
 		ft_printf("%d fuite(s) detectées. 🆘\n", leaks_found);
+}
+
+void check_fragmentation() {
+    size_t free_blocks = 0;
+    size_t used_blocks = 0;
+    size_t total_free_size = 0;
+    size_t total_used_size = 0;
+
+    t_memory_block *current = memory_block;
+    while (current != NULL) {
+        if (current->free) {
+            free_blocks++;
+            total_free_size += current->size;
+        } else {
+            used_blocks++;
+            total_used_size += current->size;
+        }
+        current = current->next;
+    }
+
+    ft_printf("Fragmentation Report:\n");
+    ft_printf("Total free blocks: %d\n", (int)free_blocks);
+    ft_printf("Total used blocks: %d\n", (int)used_blocks);
+    ft_printf("Total free memory size: %d\n", (int)total_free_size);
+    ft_printf("Total used memory size: %d\n", (int)total_used_size);
+    ft_printf("Average free block size: %d\n", (int)free_blocks ? (int)total_free_size / (int)free_blocks : 0);
+    ft_printf("Average used block size: %d\n", (int)used_blocks ? (int)total_used_size / (int)used_blocks : 0);
 }
